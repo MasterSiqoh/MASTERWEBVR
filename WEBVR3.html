@@ -1,0 +1,123 @@
+<!-- Doctype dan struktur dasar HTML -->
+<html class="gr__gasolin_idv_tw">
+  <head>
+    <!-- Meta tags untuk konfigurasi halaman -->
+    <meta charset="utf-8">
+    <title>PARKIR FILKOM</title>
+    <!-- Meta viewport untuk responsivitas mobile -->
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,shrink-to-fit=no,user-scalable=no,minimal-ui">
+    <!-- Konfigurasi untuk PWA (Progressive Web App) -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="black">
+    <!-- Icon untuk aplikasi web -->
+    <link rel="icon" sizes="965x354" href="https://virtual.ub.ac.id/wp-content/uploads/2020/09/logovirtual2.png">
+    
+    <!-- Library A-Frame untuk membuat scene VR/AR -->
+    <script src="https://aframe.io/releases/1.4.1/aframe.min.js"></script>
+    <!-- Component untuk navigasi dengan href -->
+    <script src="aframe-href-component.js"></script>
+    <!-- Component untuk event handling (klik, hover, dll) -->
+    <script src="https://unpkg.com/aframe-event-set-component@5.0.0/dist/aframe-event-set-component.min.js"></script>
+  </head>
+
+
+  <body data-gr-c-s-loaded="true">
+
+    <!-- Scene utama A-Frame - container untuk semua elemen VR -->
+    <a-scene canvas="" keyboard-shortcuts="" vr-mode-ui="">
+      
+      <!-- Entity untuk posisi kamera dengan offset -->
+      <a-entity position="0 1.8 4">
+        <!-- Kamera VR dengan kontrol look dan WASD dinonaktifkan -->
+        <a-camera id="camera" look-controls="" wasd-controls-enabled="false" camera="active:true" rotation="-1.3750987083139854 -3.0939720937064483 0" position="0 0 0">
+          <!-- Cursor VR berbentuk ring dengan animasi fuse -->
+          <a-ring radius-outer="0.30" radius-inner="0.20" position="0 0 -3" material="color: cyan; shader: flat" cursor="maxDistance: 30; fuse: true" geometry="primitive:ring;radiusOuter:0.30;radiusInner:0.20" raycaster="" scale="0.4628376812078244 0.4628376812078244 0.4628376812078244">
+            <!-- Animasi saat klik - ring mengecil lalu membesar -->
+            <a-animation begin="click" easing="ease-in" attribute="scale" fill="backwards" from="0.1 0.1 0.1" to="1 1 1" dur="150"></a-animation>
+            <!-- Animasi saat fusing - ring mengecil secara bertahap -->
+            <a-animation begin="fusing" easing="ease-in" attribute="scale" fill="forwards" from="1 1 1" to="0.1 0.1 0.1" dur="1500"></a-animation>
+          </a-ring>
+        </a-camera>
+      </a-entity>
+
+      <!-- Background 360 derajat menggunakan gambar -->
+      <a-sky src="IMG_0575.jpg" rotation="0 0 0"></a-sky>
+
+      <!-- Box merah untuk header "Fakultas Ilmu Komputer" -->
+      <a-entity geometry="primitive: plane; height: 1.2; width: 4" material="color:red; side: double; opacity:0.5;" position="1 4 0" rotation="0 0 0" href="index.html"></a-entity>
+      <!-- Teks header dengan font khusus -->
+      <a-text font="kelsonsans" value="Fakultas \nIlmu Komputer" width="10" position="1 4 0" rotation="0 0 0" align="center" href="index.html"></a-text>
+
+      <!-- Tombol "Masuk" untuk navigasi ke halaman berikutnya -->
+      <a-entity id="masukButton" geometry="primitive: plane; height: 0.5; width: 1.5" material="color: red; side: double" position="1 1 0" ;class="clickable"></a-entity>
+      <!-- Teks pada tombol masuk -->
+      <a-text id="masukText" value="Masuk" position="1 1 0" align="center" visible="true" width="8"></a-text>
+      
+      <!-- Box merah untuk teks deskripsi lokasi -->
+      <a-entity id="descriptionBox" geometry="primitive: plane; height: 1.5; width: 8" material="color:red; side: double; opacity:0.5;" position="1 2.5 0" visible="true"></a-entity>
+      <!-- Teks deskripsi tentang Edutech Garden -->
+      <a-text id="descriptionText" value="Jadi teman-teman ini adalah Edutech Garden, teman-teman bisa belajar bersama disini" position="1 2.5 0" align="center" visible="true" width="8"></a-text>
+
+      <script>
+        // Event listener untuk memastikan DOM sudah siap
+        document.addEventListener('DOMContentLoaded', function() {
+          // Ambil referensi ke tombol masuk
+          const masukButton = document.querySelector('#masukButton');
+          let fuseTimeout; // Variable untuk menyimpan timeout fuse
+          
+          // Fungsi untuk navigasi ke halaman berikutnya
+          function goToNextPage() {
+            window.location.href = 'WEBVR1.html'; // Kembali ke halaman pertama (loop)
+          }
+          
+          // Event listener untuk klik langsung (mouse/touch)
+          masukButton.addEventListener('click', function() {
+            goToNextPage();
+          });
+
+          // Event listener untuk mouse hover - mulai countdown 2 detik
+          masukButton.addEventListener('mouseenter', function() {
+            fuseTimeout = setTimeout(function() {
+              goToNextPage();
+            }, 2000); // Jeda 2 detik sebelum navigasi
+          });
+
+          // Event listener untuk mouse leave - batalkan countdown
+          masukButton.addEventListener('mouseleave', function() {
+            if (fuseTimeout) {
+              clearTimeout(fuseTimeout); // Batalkan timer jika cursor keluar
+            }
+          });
+
+          // Event listener untuk VR cursor masuk ke area tombol
+          masukButton.addEventListener('raycaster-intersected', function() {
+            fuseTimeout = setTimeout(function() {
+              goToNextPage();
+            }, 2000); // Jeda 2 detik untuk VR fuse
+          });
+
+          // Event listener untuk VR cursor keluar dari area tombol
+          masukButton.addEventListener('raycaster-intersected-cleared', function() {
+            if (fuseTimeout) {
+              clearTimeout(fuseTimeout); // Batalkan timer VR fuse
+            }
+          });
+        });
+      </script>
+
+
+
+
+
+
+
+
+
+
+      
+
+      
+  </a-scene>
+  
+
+</body></html>
